@@ -1,5 +1,6 @@
 package com.app.tracking;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button btnAbort;
 
     AlarmReceiver alarm;
+    SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +36,9 @@ public class MainActivity extends AppCompatActivity {
         btnTracking = findViewById(R.id.btnTracking);
         btnAbort = findViewById(R.id.btnAbort);
 
+        settings = this.getSharedPreferences("data", Context.MODE_MULTI_PROCESS);
+
+
         // manage service
         btnTracking.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -42,7 +48,15 @@ public class MainActivity extends AppCompatActivity {
 
         btnAbort.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                destroyService();
+                try {
+
+                    alarm.cancelAlarm();
+                    Toast.makeText(getApplicationContext(), "RECORRIDO FINALIZADO", Toast.LENGTH_SHORT).show();
+                    finish();
+
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
 
@@ -60,22 +74,19 @@ public class MainActivity extends AppCompatActivity {
             //CALLING SERVICE
             alarm = new AlarmReceiver();
             alarm.setAlarm(this);
-
         }
-    }
-
-    public void destroyService(){
-        alarm.abortBroadcast();
     }
 
     boolean saveUser(String placa) {
 
         if (placa.isEmpty()) return false;
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings.edit().clear().commit();
+
         SharedPreferences.Editor editor = settings.edit();
         editor.putString("placa", placa);
         editor.commit();
+        editor.apply();
 
         return true;
     }

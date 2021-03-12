@@ -1,6 +1,7 @@
 package com.app.tracking;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
@@ -17,8 +18,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 public class AlarmService extends Service {
-
-    String placa;
 
     private GpsTracker gpsTracker = new GpsTracker(this);
     RequestQueue queue;
@@ -37,7 +36,6 @@ public class AlarmService extends Service {
 
         queue = Volley.newRequestQueue(this);
 
-        placa = getPlaca();
     }
 
     @Override
@@ -54,7 +52,7 @@ public class AlarmService extends Service {
 
         Location location = getPosition();
 
-        String params = "?placa=" + placa + "&latitud=" + location.getLatitude() + "&longitud=" + location.getLongitude();
+        String params = "?placa=" + getPlaca() + "&latitud=" + location.getLatitude() + "&longitud=" + location.getLongitude();
         String url = API_API + API_ENDPOINT + params;
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -68,7 +66,7 @@ public class AlarmService extends Service {
 
     public String getPlaca() {
 
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences settings = this.getSharedPreferences("data", Context.MODE_MULTI_PROCESS);
         return settings.getString("placa", "");
     }
 
@@ -80,5 +78,4 @@ public class AlarmService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 }

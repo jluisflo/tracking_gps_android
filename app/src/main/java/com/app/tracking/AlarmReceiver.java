@@ -11,6 +11,7 @@ public class AlarmReceiver extends BroadcastReceiver {
 
     //interval for execute task service
     private Long INTERVAL = 5L;
+    PendingIntent pi;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -22,11 +23,15 @@ public class AlarmReceiver extends BroadcastReceiver {
     public void setAlarm(Context context) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent i = new Intent(context, AlarmReceiver.class);
-        PendingIntent pi = PendingIntent.getBroadcast(context, 0, i, 0);
+        pi = PendingIntent.getBroadcast(context, 0, i, 0);
+
         assert am != null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             am.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, (System.currentTimeMillis() / 1000L + INTERVAL) * 1000L, pi); //Next alarm in 15s
         }
     }
 
+    public void cancelAlarm(){
+        pi.cancel();
+    }
 }
