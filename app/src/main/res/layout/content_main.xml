@@ -6,14 +6,42 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ImageView
-        android:id="@+id/imageView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:contentDescription="TODO"
-        android:scaleType="fitCenter"
-        android:padding="60dp"
-        app:srcCompat="@drawable/icon_location"
-        tools:layout_editor_absoluteX="173dp"
-        tools:layout_editor_absoluteY="343dp" />
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="183dp"
+        tools:layout_editor_absoluteY="192dp">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PLACA DE VEHICULO"
+            android:layout_marginTop="30dp"/>
+
+        <EditText
+            android:id="@+id/txtPlaca"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:layout_marginTop="30dp" />
+
+        <Button
+            android:id="@+id/btnTracking"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="40dp"
+            android:text="Iniciar Recorrido" />
+
+        <Button
+            android:id="@+id/btnAbort"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_marginTop="10dp"
+            android:text="Detener Recorrido"
+            app:backgroundTint="@color/cardview_dark_background" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
