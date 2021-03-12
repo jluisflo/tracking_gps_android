@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         btnAbort = findViewById(R.id.btnAbort);
 
         settings = this.getSharedPreferences("data", Context.MODE_MULTI_PROCESS);
-
+        check();
 
         // manage service
         btnTracking.setOnClickListener(new View.OnClickListener() {
@@ -59,21 +59,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
-        try {
-            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void initService() {
         if (saveUser(txtPlaca.getText().toString())) {
             //CALLING SERVICE
-            alarm = new AlarmReceiver();
-            alarm.setAlarm(this);
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(getApplicationContext(), "SE NECESITAN PERMISOS DE UBICACION", Toast.LENGTH_SHORT).show();
+            }else{
+                alarm = new AlarmReceiver();
+                alarm.setAlarm(this);
+            }
         }
     }
 
@@ -89,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
 
         return true;
+    }
+
+    public void check(){
+        try {
+            if (ContextCompat.checkSelfPermission(getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
